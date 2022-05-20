@@ -10,6 +10,10 @@ variable "aws_ec2_security_group_name" {
   default = "spot-security-group"
 }
 
+variable "aws_ec2_instance_size" {
+  default = "xlarge"
+}
+
 variable "aws_region" {
   default = "eu-central-1"
 }

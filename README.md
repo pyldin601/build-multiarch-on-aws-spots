@@ -15,6 +15,7 @@ jobs:
       DOCKER_IMAGE_TAG: latest
       WORKFLOW_CHECKOUT: master # Should be the same as the ref used in "uses" expression.
       AWS_REGION: eu-central-1
+      AWS_EC2_INSTANCE_SIZE: large
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

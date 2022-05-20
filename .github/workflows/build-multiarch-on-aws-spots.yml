@@ -31,6 +31,10 @@ on:
         type: string
         required: false
         default: eu-central-1
+      AWS_EC2_INSTANCE_SIZE:
+        type: string
+        required: false
+        default: xlarge
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -59,6 +63,7 @@ jobs:
       TF_VAR_docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
       TF_VAR_aws_ec2_key_pair_name: kp_${{ github.repository }}@${{ github.sha }}
       TF_VAR_aws_ec2_security_group_name: sg_${{ github.repository }}@${{ github.sha }}
+      TF_VAR_aws_ec2_instance_size: ${{ inputs.AWS_EC2_INSTANCE_SIZE }}
       TF_VAR_aws_region: ${{ inputs.AWS_REGION }}
     outputs:
       PUBLIC_IPS: ${{ env.PUBLIC_IPS }}
@@ -200,6 +205,7 @@ jobs:
       TF_VAR_docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
       TF_VAR_aws_ec2_key_pair_name: ${{ github.repository }}@${{ github.sha }}
       TF_VAR_aws_ec2_security_group_name: sg_${{ github.repository }}@${{ github.sha }}
+      TF_VAR_aws_ec2_instance_size: ${{ inputs.AWS_EC2_INSTANCE_SIZE }}
       TF_VAR_aws_region: ${{ inputs.AWS_REGION }}
     steps:
       -

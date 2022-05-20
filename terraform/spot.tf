@@ -6,11 +6,11 @@ variable "environment" {
   default = {
     amd64 = {
       arch : "x86_64",
-      instance_type : "c5.xlarge"
+      instance_type : "c5"
     },
     arm64 = {
       arch : "arm64",
-      instance_type : "c6g.xlarge"
+      instance_type : "c6g"
     }
   }
 }
@@ -81,7 +81,7 @@ resource "aws_spot_instance_request" "spot" {
   for_each = var.environment
 
   ami           = data.aws_ami.builder[each.key].id
-  instance_type = each.value.instance_type
+  instance_type = "${each.value.instance_type}.${var.aws_ec2_instance_size}"
 
   associate_public_ip_address = true
   wait_for_fulfillment        = true
