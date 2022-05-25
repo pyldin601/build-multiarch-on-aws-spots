@@ -61,8 +61,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_docker_login: ${{ secrets.DOCKERHUB_USERNAME }}
       TF_VAR_docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
-      TF_VAR_aws_ec2_key_pair_name: kp_${{ github.repository }}@${{ github.sha }}
-      TF_VAR_aws_ec2_security_group_name: sg_${{ github.repository }}@${{ github.sha }}
+      TF_VAR_aws_ec2_key_pair_name: kp_${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+      TF_VAR_aws_ec2_security_group_name: sg_${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
       TF_VAR_aws_ec2_instance_size: ${{ inputs.AWS_EC2_INSTANCE_SIZE }}
       TF_VAR_aws_region: ${{ inputs.AWS_REGION }}
     outputs:
