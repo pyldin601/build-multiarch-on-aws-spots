@@ -46,8 +46,8 @@ on:
         required: true
 
 concurrency:
-  cancel-in-progress: false
-  group: build-multiarch-on-aws-spots
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   TERRAFORM_DIR: terraform
