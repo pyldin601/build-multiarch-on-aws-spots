@@ -42,7 +42,7 @@ on:
       BUILD_DOCKERFILE:
         type: string
         required: false
-        default: Dockerfile
+        default: ./Dockerfile
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -157,7 +157,7 @@ jobs:
         run: ssh spot "mkdir ~/code && git clone \"$REPOSITORY_URL\" ~/code && cd ~/code && git checkout \"$CHECKOUT\""
       -
         name: Build docker image on spot instance
-        run: ssh spot "sudo docker build -t \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\" -f \"~/code/$BUILD_CONTEXT/$BUILD_DOCKERFILE\" ~/code/$BUILD_CONTEXT"
+        run: ssh spot "sudo docker build -t \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\" -f \"~/code/$BUILD_DOCKERFILE\" ~/code/$BUILD_CONTEXT"
       -
         name: Push docker image from spot instance
         run: ssh spot "sudo docker push \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\""
