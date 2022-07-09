@@ -35,6 +35,14 @@ on:
         type: string
         required: false
         default: xlarge
+      BUILD_CONTEXT:
+        type: string
+        required: false
+        default: .
+      BUILD_DOCKERFILE:
+        type: string
+        required: false
+        default: Dockerfile
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -124,6 +132,8 @@ jobs:
       CHECKOUT: ${{ inputs.CHECKOUT }}
       IMAGE_NAME: ${{ inputs.DOCKER_IMAGE_NAME }}
       IMAGE_TAG: ${{ inputs.DOCKER_IMAGE_TAG }}
+      BUILD_CONTEXT: ${{ inputs.BUILD_CONTEXT }}
+      BUILD_DOCKERFILE: ${{ inputs.BUILD_DOCKERFILE }}
     steps:
       -
         name: Setup SSH client
@@ -147,7 +157,7 @@ jobs:
         run: ssh spot "mkdir ~/code && git clone \"$REPOSITORY_URL\" ~/code && cd ~/code && git checkout \"$CHECKOUT\""
       -
         name: Build docker image on spot instance
-        run: ssh spot "sudo docker build -t \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\" ~/code"
+        run: ssh spot "sudo docker build -t \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\" -f \"~/code/$BUILD_CONTEXT/$BUILD_DOCKERFILE\" ~/code/$BUILD_CONTEXT"
       -
         name: Push docker image from spot instance
         run: ssh spot "sudo docker push \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\""
