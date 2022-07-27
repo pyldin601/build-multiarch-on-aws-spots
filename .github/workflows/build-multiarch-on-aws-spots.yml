@@ -35,6 +35,14 @@ on:
         type: string
         required: false
         default: xlarge
+      BUILD_CONTEXT:
+        type: string
+        required: false
+        default: .
+      BUILD_DOCKERFILE:
+        type: string
+        required: false
+        default: ./Dockerfile
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -44,10 +52,6 @@ on:
         required: true
       DOCKERHUB_TOKEN:
         required: true
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
 
 env:
   TERRAFORM_DIR: terraform
@@ -61,8 +65,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_docker_login: ${{ secrets.DOCKERHUB_USERNAME }}
       TF_VAR_docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
-      TF_VAR_aws_ec2_key_pair_name: kp_${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
-      TF_VAR_aws_ec2_security_group_name: sg_${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+      TF_VAR_aws_ec2_key_pair_name: kp_${{ github.repository }}-${{ github.ref }}-${{ github.run_number }}
+      TF_VAR_aws_ec2_security_group_name: sg_${{ github.repository }}-${{ github.ref }}-${{ github.run_number }}
       TF_VAR_aws_ec2_instance_size: ${{ inputs.AWS_EC2_INSTANCE_SIZE }}
       TF_VAR_aws_region: ${{ inputs.AWS_REGION }}
     outputs:
@@ -124,6 +128,8 @@ jobs:
       CHECKOUT: ${{ inputs.CHECKOUT }}
       IMAGE_NAME: ${{ inputs.DOCKER_IMAGE_NAME }}
       IMAGE_TAG: ${{ inputs.DOCKER_IMAGE_TAG }}
+      BUILD_CONTEXT: ${{ inputs.BUILD_CONTEXT }}
+      BUILD_DOCKERFILE: ${{ inputs.BUILD_DOCKERFILE }}
     steps:
       -
         name: Setup SSH client
@@ -147,7 +153,7 @@ jobs:
         run: ssh spot "mkdir ~/code && git clone \"$REPOSITORY_URL\" ~/code && cd ~/code && git checkout \"$CHECKOUT\""
       -
         name: Build docker image on spot instance
-        run: ssh spot "sudo docker build -t \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\" ~/code"
+        run: ssh spot "cd ~/code && sudo docker build -t \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\" -f $BUILD_DOCKERFILE $BUILD_CONTEXT"
       -
         name: Push docker image from spot instance
         run: ssh spot "sudo docker push \"$IMAGE_NAME:$IMAGE_TAG-"'$(dpkg --print-architecture)'"\""
