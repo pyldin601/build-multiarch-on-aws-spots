@@ -94,7 +94,7 @@ jobs:
       -
         name: "Save Terraform State File"
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: terraform-state
           path: ${{ env.TERRAFORM_DIR }}/terraform.tfstate
