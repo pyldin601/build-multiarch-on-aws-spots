@@ -94,7 +94,7 @@ jobs:
       -
         name: "Save Terraform State File"
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: terraform-state
           path: ${{ env.TERRAFORM_DIR }}/terraform.tfstate
@@ -222,7 +222,7 @@ jobs:
           ref: ${{ inputs.WORKFLOW_CHECKOUT }}
       -
         name: "Download Terraform State File"
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: terraform-state
           path: ${{ env.TERRAFORM_DIR }}
