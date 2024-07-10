@@ -28,7 +28,7 @@ data "aws_ami" "builder" {
   filter {
     name = "name"
     values = [
-      "ubuntu/images/hvm-ssd/ubuntu-noble-24.04-*-server-*",
+      "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-*-server-*",
     ]
   }
 
