@@ -22,7 +22,7 @@ on:
       WORKFLOW_REPOSITORY:
         type: string
         required: false
-        default: pldin601/build-multiarch-on-aws-spots
+        default: pyldin601/build-multiarch-on-aws-spots
       WORKFLOW_CHECKOUT:
         type: string
         required: false
