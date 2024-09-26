@@ -10,9 +10,9 @@ on: [workflow_dispatch]
 jobs:
   build:
     name: Build
-    uses: pldin601/build-multiarch-on-aws-spots/.github/workflows/build-multiarch-on-aws-spots.yml@v1.0.1
+    uses: pldin601/build-multiarch-on-aws-spots/.github/workflows/build-multiarch-on-aws-spots.yml@v1.1.2
     with:
-      DOCKER_IMAGE_TAG: v1.0.1
+      DOCKER_IMAGE_TAG: v1.1.2
       WORKFLOW_CHECKOUT: master # Should be the same as the ref used in "uses" expression.
       AWS_REGION: eu-central-1
       AWS_EC2_INSTANCE_SIZE: large
