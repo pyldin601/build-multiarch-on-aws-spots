@@ -196,6 +196,41 @@ jobs:
         name: Push docker manifest
         run: ssh spot "sudo docker manifest push \"$IMAGE_NAME:$IMAGE_TAG\""
 
+  cleanup-tags:
+    name: Cleanup DockerHub
+    needs:
+      - manifest
+    runs-on: ubuntu-latest
+    steps:
+      -
+        id: dockerhub_login
+        name: Authenticate on DockerHub
+        uses: actionsflow/axios@v1
+        with:
+          url: https://hub.docker.com/v2/users/login/
+          method: POST
+          body: >
+            {
+              "username": "${{ secrets.DOCKERHUB_USERNAME }}",
+              "password": "${{ secrets.DOCKERHUB_TOKEN }}"
+            }
+      -
+        name: Delete temporary amd64 tag from DockerHub
+        uses: actionsflow/axios@v1
+        with:
+          url: https://hub.docker.com/v2/repositories/${{ inputs.DOCKER_IMAGE_NAME }}/tags/${{ inputs.DOCKER_IMAGE_TAG }}-amd64/
+          method: DELETE
+          bearer-token: ${{ fromJSON(steps.dockerhub_login.outputs.data).token }}
+          is_debug: true
+      -
+        name: Delete temporary arm64 tag from DockerHub
+        uses: actionsflow/axios@v1
+        with:
+          url: https://hub.docker.com/v2/repositories/${{ inputs.DOCKER_IMAGE_NAME }}/tags/${{ inputs.DOCKER_IMAGE_TAG }}-arm64/
+          method: DELETE
+          bearer-token: ${{ fromJSON(steps.dockerhub_login.outputs.data).token }}
+          is_debug: true
+
   destroy-spots:
     name: Destroy spot machines
     runs-on: ubuntu-latest
